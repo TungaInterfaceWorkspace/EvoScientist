@@ -361,7 +361,7 @@ What the mounts are for:
 The image does not include the agent's research Python; run `EvoSci setup` once in a container with the same `evosci-data` mount (`docker run --rm -v evosci-data:/home/evosci/.evoscientist ghcr.io/evoscientist/evoscientist:latest setup`, since the image's entrypoint is `evosci`; with compose, `docker compose run --rm evoscientist setup`), and it builds the environment in that volume, where it survives image upgrades.
 
 > [!IMPORTANT]
-> The image runs as a non-root user (`evosci`, UID `1000`). For the `./workspace` bind mount, the host directory must be writable by that UID. If your host user ID differs, either `chown -R 1000:1000 ./workspace` once, or pass `--user "$(id -u):$(id -g)"` on every `docker run` so the container takes on your UID.
+> The image runs as a non-root user (`evosci`, UID `1000`). For the `./workspace` bind mount, the host directory must be writable by that UID. On Linux, if your host user ID differs, run `chown -R 1000:1000 ./workspace` once (on Docker Desktop for macOS/Windows this is usually not needed). Don't use `--user "$(id -u):$(id -g)"`: the image's data and config live under `/home/evosci`, which is only accessible to UID `1000`, so running as any other UID makes `evosci` fail with a permission error.
 
 Or use `docker compose` (a starter [`docker-compose.yml`](./docker-compose.yml) is included):
 
